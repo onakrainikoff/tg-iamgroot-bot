@@ -9,10 +9,10 @@
         <relativePath/>
     </parent>
 
-    <groupId>ru.on8off.tg</groupId>
-    <artifactId>iamgroot-bot</artifactId>
+    <groupId>ru.on8off</groupId>
+    <artifactId>tg-iamgroot-bot</artifactId>
     <version>${version}</version>
-    <name>iamgroot-bot</name>
+    <name>tg-iamgroot-bot</name>
 
     <properties>
         <version>local</version>
@@ -135,7 +135,7 @@
                             <dockerHost>${docker_host_url}</dockerHost>
                             <images>
                                 <image>
-                                    <name>ghcr.io/onakrainikoff/tg-iamgroot-bot:${project.version}</name>
+                                    <name>ghcr.io/onakrainikoff/tg-iamgroot-bot-project:${project.version}</name>
                                     <build>
                                         <from>openjdk:17-slim</from>
                                         <assembly>
@@ -165,7 +165,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/onakrainikoff/tg-iamgroot-bot</url>
+            <url>https://maven.pkg.github.com/onakrainikoff/tg-iamgroot-bot-project</url>
         </repository>
     </distributionManagement>
 
