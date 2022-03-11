@@ -13,11 +13,11 @@ Bot link [t.me/IamBabyGrootBot](https://t.me/IamBabyGrootBot)
 ![group chat](doc/img/group_chat.jpg)
 
 ### Releases
-[Releases list](https://github.com/onakrainikoff/tg-iamgroot-bot/releases)
+[Releases list](https://github.com/onakrainikoff/tg-iamgroot-bot-project/releases)
 
-[Docker Images list](https://github.com/onakrainikoff/tg-iamgroot-bot/pkgs/container/tg-iamgroot-bot)
+[Docker Images list](https://github.com/onakrainikoff/tg-iamgroot-bot/pkgs/container/tg-iamgroot-bot-project)
 
-[Jars list](https://github.com/onakrainikoff/tg-iamgroot-bot/packages/1295224/versions)
+[Jars list](https://github.com/onakrainikoff/tg-iamgroot-bot-project/packages/1299762)
 
 ### Run
 #### Install helm chart
@@ -38,7 +38,7 @@ docker run --rm -d \
 -e BOT_USER_NAME=<name> \
 -e BOT_TOKEN=<token> \
 -e BOT_THREADS_COUNT=5 \
-ghcr.io/onakrainikoff/tg-iamgroot-bot:<version>
+ghcr.io/onakrainikoff/tg-iamgroot-bot-project:<version>
 ```
 
 #### Run in jar

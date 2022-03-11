@@ -1,7 +1,7 @@
 version: '3'
 services:
   iamgroot-bot:
-    image: ghcr.io/onakrainikoff/tg-iamgroot-bot:1.0
+    image: ghcr.io/onakrainikoff/tg-iamgroot-bot-project:1.0
     ports:
       - "8080:8080"
     environment:
