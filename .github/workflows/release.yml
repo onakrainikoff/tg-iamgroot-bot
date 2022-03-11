@@ -1,0 +1,48 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        required: true
+        description: "Release version (1.0 or 1.0-rc)"
+      pre-release:
+        required: true
+        type: boolean
+        default: false
+        description: "This is a pre-release"
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      - name: "Publish jar and docker image v${{ github.event.inputs.version }}"
+        run: mvn clean deploy -Dversion=${{ github.event.inputs.version }} -P docker -Ddocker_login=${{ github.actor }} -Ddocker_password=${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Create tag v${{ github.event.inputs.version }}"
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: "refs/tags/v${{ github.event.inputs.version }}",
+              sha: context.sha
+            })
+      - name: "Create Release v${{ github.event.inputs.version }}"
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: "refs/tags/v${{ github.event.inputs.version }}"
+          release_name: "Release v${{ github.event.inputs.version }}"
+          body: |
+            Changes in this Release
+          draft: false
+          prerelease: ${{ github.event.inputs.pre-release }}

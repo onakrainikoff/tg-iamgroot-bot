@@ -1,0 +1,18 @@
+tgBotClient:
+  userName: ${BOT_USER_NAME}
+  token: ${BOT_TOKEN}
+  threadCount: ${BOT_THREADS_COUNT:1}
+  productionMode: true
+
+logging:
+  level:
+    root: ERROR
+    ru.on8off: INFO
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] [%marker] %logger{50}:%line --- %msg%n'
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus,metrics,info

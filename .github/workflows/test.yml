@@ -1,0 +1,18 @@
+name: Test
+on:
+  pull_request:
+    types: [assigned]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      - name: Test project
+        run: mvn clean install -P docker -Dversion=0.0

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.6.4</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>ru.on8off.tg</groupId>
+    <artifactId>iamgroot-bot</artifactId>
+    <version>${version}</version>
+    <name>iamgroot-bot</name>
+
+    <properties>
+        <version>local</version>
+        <telegrambots.version>5.7.1</telegrambots.version>
+        <java.version>17</java.version>
+        <docker_host_url>unix:///var/run/docker.sock</docker_host_url>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots</artifactId>
+            <version>${telegrambots.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <configuration>
+                    <failOnNoGitDirectory>false</failOnNoGitDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>tcp</id>
+            <activation>
+                <property>
+                    <name>docker_host</name>
+                </property>
+            </activation>
+            <properties>
+                <docker_port>2375</docker_port>
+                <docker_host_url>tcp://${docker_host}:${docker_port}</docker_host_url>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>docker</id>
+            <activation>
+                <property>
+                    <name>docker_host</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <version>0.38.0</version>
+                        <executions>
+                            <execution>
+                                <id>build</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>push</id>
+                                <phase>deploy</phase>
+                                <goals>
+                                    <goal>push</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <dockerHost>${docker_host_url}</dockerHost>
+                            <images>
+                                <image>
+                                    <name>ghcr.io/onakrainikoff/tg-iamgroot-bot:${project.version}</name>
+                                    <build>
+                                        <from>openjdk:17-slim</from>
+                                        <assembly>
+                                            <descriptorRef>artifact</descriptorRef>
+                                            <targetDir>/${project.artifactId}</targetDir>
+                                        </assembly>
+                                        <cmd>
+                                            <shell>java $JAVA_OPTIONS -jar /${project.artifactId}/${project.artifactId}-${project.version}.jar $JAVA_ARGS</shell>
+                                        </cmd>
+                                    </build>
+                                </image>
+                            </images>
+                            <authConfig>
+                                <push>
+                                    <username>${docker_login}</username>
+                                    <password>${docker_password}</password>
+                                </push>
+                            </authConfig>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/onakrainikoff/tg-iamgroot-bot</url>
+        </repository>
+    </distributionManagement>
+
+</project>

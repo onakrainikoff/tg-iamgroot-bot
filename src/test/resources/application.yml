@@ -1,0 +1,12 @@
+tgBotClient:
+  userName: test
+  token: test
+  threadCount: 1
+  productionMode: false
+
+logging:
+  level:
+    root: ERROR
+    ru.on8off: INFO
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] [%marker] %logger{50}:%line --- %msg%n'
